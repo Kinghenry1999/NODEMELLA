@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Container, Card, Form, Button, Alert, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../Utility/Api";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -18,7 +18,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await api.post("/api/auth/login", {
         email: form.email,
         password: form.password,
       });
@@ -40,7 +40,7 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/forgot-password", {
+      const res = await api.post("/api/auth/forgot-password", {
         email: forgotEmail,
       });
       setForgotMessage({ text: res.data.message, type: "success" });

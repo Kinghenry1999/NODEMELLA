@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Container, Card, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../Utility/Api";
 
 export default function ResetPassword() {
   const [form, setForm] = useState({ email: "", newPassword: "", confirmPassword: "" });
@@ -36,7 +36,7 @@ export default function ResetPassword() {
 
     setIsLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/reset-password", {
+      const res = await api.post("/api/auth/reset-password", {
         email: form.email,
         newPassword: form.newPassword,
       });
