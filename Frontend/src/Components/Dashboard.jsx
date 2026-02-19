@@ -86,7 +86,7 @@
 
 
 import { useState } from "react";
-import { Navbar, Nav, Button, Dropdown } from "react-bootstrap";
+import { Navbar, Nav, Button } from "react-bootstrap";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { FiMenu, FiHome, FiEdit, FiFileText, FiUser, FiSettings } from "react-icons/fi";
 
@@ -110,11 +110,33 @@ export default function Dashboard() {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const menuItems = [
-    { name: "Dashboard", path: "allpost", icon: <FiHome /> },
+    { name: "All Posts", path: "allpost", icon: <FiHome /> },
     { name: "Create Post", path: "createpost", icon: <FiEdit /> },
     { name: "Drafts", path: "drafts", icon: <FiFileText /> },
     { name: "Profile", path: "profile", icon: <FiUser /> },
     { name: "Settings", path: "settings", icon: <FiSettings /> },
+  ];
+
+  // Dummy posts for All Posts section
+  const posts = [
+    {
+      id: 1,
+      title: "How to Learn React Quickly",
+      description: "Tips and tricks to become proficient in React in just a few weeks.",
+      image: "https://source.unsplash.com/600x400/?react",
+    },
+    {
+      id: 2,
+      title: "Understanding JavaScript Closures",
+      description: "Closures are one of the most important concepts in JS. Learn them now!",
+      image: "https://source.unsplash.com/600x400/?javascript",
+    },
+    {
+      id: 3,
+      title: "Designing Modern Dashboards",
+      description: "Best practices to create clean, responsive dashboards for your apps.",
+      image: "https://source.unsplash.com/600x400/?dashboard",
+    },
   ];
 
   return (
@@ -131,19 +153,9 @@ export default function Dashboard() {
 
         <div className="navbar-right d-flex align-items-center gap-3">
           <span className="d-none d-md-inline">Hi, {userInfo?.name || "User"}</span>
-
-          <Dropdown align="end">
-            <Dropdown.Toggle variant="outline-primary" id="dropdown-user">
-              Profile
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => navigate("/profile")}>Profile</Dropdown.Item>
-              <Dropdown.Item onClick={() => navigate("/settings")}>Settings</Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <Button size="sm" variant="outline-primary" onClick={handleLogout}>
+            Logout
+          </Button>
         </div>
       </Navbar>
 
@@ -158,8 +170,8 @@ export default function Dashboard() {
           <Nav className="flex-column gap-2">
             {menuItems.map((item) => (
               <NavLink
-                to={item.path}
                 key={item.name}
+                to={item.path}
                 className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
               >
                 <span className="icon">{item.icon}</span> {item.name}
@@ -176,10 +188,24 @@ export default function Dashboard() {
             <Button className="btn-gradient">+ New Post</Button>
           </div>
 
-          {/* Blog Grid */}
+          {/* Blog Posts Grid */}
           <div className="blog-grid">
-            <Outlet />
+            {posts.map((post) => (
+              <div className="blog-card" key={post.id}>
+                <img src={post.image} alt={post.title} />
+                <div className="card-body">
+                  <h5 className="card-title">{post.title}</h5>
+                  <p className="card-text">{post.description}</p>
+                  <Button className="btn-read-more" onClick={() => alert(`Read more about: ${post.title}`)}>
+                    Read More
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
+
+          {/* Outlet for nested routes */}
+          <Outlet />
         </main>
 
       </div>
