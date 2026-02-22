@@ -17,7 +17,7 @@ router.post(
   [
     body("heading").notEmpty().withMessage("Heading is required"),
     body("content").notEmpty().withMessage("Content is required"),
-    body("image").isURL().withMessage("Image must be a valid URL"),
+    body("image").notEmpty().withMessage("Image is required"),
     body("adminId").isInt().withMessage("Valid admin ID is required"),
   ],
   createPost
@@ -38,7 +38,7 @@ router.put(
   [
     body("heading").notEmpty().withMessage("Heading is required"),
     body("content").notEmpty().withMessage("Content is required"),
-    body("image").isURL().withMessage("Image must be a valid URL"),
+    body("image").notEmpty().withMessage("Image is required"),
     body("adminId").isInt().withMessage("Valid admin ID is required"),
   ],
   updatePost
