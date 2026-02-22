@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Container, Alert, Spinner } from 'react-bootstrap';
+import { Alert, Spinner } from 'react-bootstrap';
 import api from '../Utility/Api.jsx';
-import { useNavigate } from 'react-router-dom';
 
 function Createpost() {
   const [formData, setFormData] = useState({
@@ -13,10 +12,8 @@ function Createpost() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Get user info from localStorage (set during login)
     const userInfo = localStorage.getItem('user');
     if (userInfo) {
       setUser(JSON.parse(userInfo));
@@ -58,13 +55,9 @@ function Createpost() {
       const response = await api.post('/posts', payload);
 
       if (response.data.success) {
-        setSuccess('Post published successfully! It will appear on the homepage soon.');
+        setSuccess('✅ Post published successfully! It now appears on the homepage.');
         setFormData({ heading: '', content: '', image: '' });
-        
-        // Redirect to dashboard or homepage after 2 seconds
-        setTimeout(() => {
-          navigate('/dashboard/allpost');
-        }, 2000);
+        setTimeout(() => setSuccess(''), 3000);
       }
     } catch (err) {
       console.error('Error creating post:', err);
@@ -76,112 +69,158 @@ function Createpost() {
 
   const styles = {
     wrapper: {
-      display: "flex",
-      justifyContent: "center",
-      padding: "40px 20px"
+      display: 'flex',
+      justifyContent: 'center',
+      padding: '2rem',
+      minHeight: '500px',
     },
-
     form: {
-      width: "100%",
-      maxWidth: "600px",
-      background: "#ffffff",
-      padding: "30px",
-      borderRadius: "12px",
-      boxShadow: "0 4px 16px rgba(0,0,0,0.08)"
+      width: '100%',
+      maxWidth: '700px',
+      background: '#ffffff',
+      padding: '2.5rem',
+      borderRadius: '15px',
+      boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
     },
-
     title: {
-      marginBottom: "20px",
-      fontWeight: "600",
-      fontSize: "20px"
+      marginBottom: '1.5rem',
+      fontWeight: '800',
+      fontSize: '1.8rem',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
     },
-
     group: {
-      display: "flex",
-      flexDirection: "column",
-      marginBottom: "18px"
+      display: 'flex',
+      flexDirection: 'column',
+      marginBottom: '1.5rem',
     },
-
     label: {
-      marginBottom: "6px",
-      fontWeight: "500",
-      fontSize: "14px"
+      marginBottom: '0.5rem',
+      fontWeight: '600',
+      fontSize: '1rem',
+      color: '#1a1a2e',
     },
-
     input: {
-      padding: "10px 12px",
-      borderRadius: "8px",
-      border: "1px solid #ddd",
-      fontSize: "14px"
+      padding: '0.75rem 1rem',
+      borderRadius: '8px',
+      border: '1px solid #ddd',
+      fontSize: '0.95rem',
+      fontFamily: 'inherit',
+      transition: 'border-color 0.3s',
     },
-
     textarea: {
-      padding: "10px 12px",
-      borderRadius: "8px",
-      border: "1px solid #ddd",
-      fontSize: "14px",
-      resize: "none"
+      padding: '0.75rem 1rem',
+      borderRadius: '8px',
+      border: '1px solid #ddd',
+      fontSize: '0.95rem',
+      fontFamily: 'inherit',
+      resize: 'vertical',
+      minHeight: '150px',
+      transition: 'border-color 0.3s',
     },
-
     button: {
-      marginTop: "10px",
-      padding: "10px 14px",
-      borderRadius: "8px",
-      border: "none",
-      backgroundColor: "#0d6efd",
-      color: "white",
-      fontWeight: "600",
-      cursor: "pointer"
-    }
+      marginTop: '1.5rem',
+      padding: '0.75rem 2rem',
+      borderRadius: '8px',
+      border: 'none',
+      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      color: 'white',
+      fontWeight: '700',
+      cursor: 'pointer',
+      fontSize: '1rem',
+      transition: 'all 0.3s ease',
+      width: '100%',
+    },
   };
 
   return (
     <div style={styles.wrapper}>
-      <form
-        style={styles.form}
-        onSubmit={(e) => {
-          e.preventDefault();
-          alert("Post created!");
-        }}
-      >
-        <h3 style={styles.title}>Create New Post</h3>
+      <div style={styles.form}>
+        {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
+        {success && <Alert variant="success" onClose={() => setSuccess('')} dismissible>{success}</Alert>}
 
-        <div style={styles.group}>
-          <label style={styles.label}>Title</label>
-          <input
-            type="text"
-            name="title"
-            placeholder="Enter title"
-            style={styles.input}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <h3 style={styles.title}>✍️ Create New Post</h3>
 
-        <div style={styles.group}>
-          <label style={styles.label}>Content</label>
-          <textarea
-            name="content"
-            rows="4"
-            placeholder="Write your post..."
-            style={styles.textarea}
-            required
-          />
-        </div>
+          <div style={styles.group}>
+            <label style={styles.label}>Post Heading *</label>
+            <input
+              type="text"
+              name="heading"
+              placeholder="Enter your post title..."
+              style={styles.input}
+              value={formData.heading}
+              onChange={handleChange}
+              required
+              onFocus={(e) => (e.target.style.borderColor = '#667eea')}
+              onBlur={(e) => (e.target.style.borderColor = '#ddd')}
+            />
+          </div>
 
-        <div style={styles.group}>
-          <label style={styles.label}>Image URL</label>
-          <input
-            type="text"
-            name="image"
-            placeholder="https://image-link.com"
-            style={styles.input}
-          />
-        </div>
+          <div style={styles.group}>
+            <label style={styles.label}>Content *</label>
+            <textarea
+              name="content"
+              placeholder="Write your amazing story here..."
+              style={styles.textarea}
+              value={formData.content}
+              onChange={handleChange}
+              required
+              onFocus={(e) => (e.target.style.borderColor = '#667eea')}
+              onBlur={(e) => (e.target.style.borderColor = '#ddd')}
+            />
+          </div>
 
-        <button type="submit" style={styles.button}>
-          Publish Post
-        </button>
-      </form>
+          <div style={styles.group}>
+            <label style={styles.label}>Image URL *</label>
+            <input
+              type="url"
+              name="image"
+              placeholder="https://example.com/image.jpg"
+              style={styles.input}
+              value={formData.image}
+              onChange={handleChange}
+              required
+              onFocus={(e) => (e.target.style.borderColor = '#667eea')}
+              onBlur={(e) => (e.target.style.borderColor = '#ddd')}
+            />
+          </div>
+
+          <button
+            type="submit"
+            style={styles.button}
+            disabled={loading}
+            onMouseEnter={(e) => {
+              if (!loading) {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 10px 25px rgba(245, 87, 108, 0.4)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+          >
+            {loading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  style={{ marginRight: '0.5rem' }}
+                />
+                Publishing...
+              </>
+            ) : (
+              '🚀 Publish Post'
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

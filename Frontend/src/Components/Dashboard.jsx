@@ -1,95 +1,7 @@
-// import { useState } from "react";
-// import {
-//   Container,
-//   Row,
-//   Col,
-//   Card,
-//   Button,
-//   Navbar,
-//   Nav
-// } from "react-bootstrap";
-// import { useNavigate , Outlet , NavLink } from "react-router-dom";
-
-// import "./Dashboard.css";
-
-// export default function Dashboard() {
-//   const navigate = useNavigate();
-
-//   const [userInfo] = useState(() => {
-//     const stored = localStorage.getItem("user");
-//     return stored ? JSON.parse(stored) : null;
-//   });
-
-
-
-//   const handleLogout = () => {
-//     localStorage.removeItem("user");
-//     navigate("/login");
-//   };
-
-//   return (
-//     <div className="dashboard-wrapper">
-
-//       {/* Top Navbar */}
-//       <Navbar bg="dark" variant="dark" className="px-4 sticky-top">
-//         <Navbar.Brand>📝 Blog Dashboard</Navbar.Brand>
-
-//         <Nav className="ms-auto align-items-center">
-//           <span className="text-white me-3">
-//             Hi, {userInfo?.name || "User"}
-//           </span>
-
-//           <Button size="sm" variant="outline-light" onClick={handleLogout}>
-//             Logout
-//           </Button>
-//         </Nav>
-//       </Navbar>
-
-//       <div className="dashboard-body">
-
-//         {/* Sidebar */}
-//         <div className="sidebar">
-//           <h5 className="fw-bold mb-4">Menu</h5>
-
-//           <Nav className="flex-column gap-2">
-//             {/* <Nav Na Nav>All Posts</Nav.Link> */}
-//             <NavLink to='allpost'>all post</NavLink>
-//             <NavLink to='createpost' >Create Post</NavLink>
-//             <Nav.Link>Drafts</Nav.Link>
-//             <Nav.Link>Profile</Nav.Link>
-//             <Nav.Link>Settings</Nav.Link>
-//           </Nav>
-//         </div>
-
-//         {/* Main Content */}
-//         <div className="content">
-
-//           {/* Header */}
-//           <div className="d-flex justify-content-between align-items-center mb-4">
-//             <h3 className="fw-bold">Your Blog Posts</h3>
-
-//             <Button variant="primary">
-//               + New Post
-//             </Button>
-//           </div>
-
-//           {/* Blog Grid */}
-//           <div>
-//              <Outlet />
-//           </div>
-           
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 import { useState } from "react";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { FiMenu, FiHome, FiEdit, FiFileText, FiUser, FiSettings } from "react-icons/fi";
-
+import { FiMenu, FiFileText, FiEdit, FiLogOut } from "react-icons/fi";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -110,104 +22,124 @@ export default function Dashboard() {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const menuItems = [
-    { name: "All Posts", path: "allpost", icon: <FiHome /> },
+    { name: "All Posts", path: "allpost", icon: <FiFileText /> },
     { name: "Create Post", path: "createpost", icon: <FiEdit /> },
-    { name: "Drafts", path: "drafts", icon: <FiFileText /> },
-    { name: "Profile", path: "profile", icon: <FiUser /> },
-    { name: "Settings", path: "settings", icon: <FiSettings /> },
   ];
 
-  // Dummy posts for All Posts section
-  const posts = [
-    {
-      id: 1,
-      title: "How to Learn React Quickly",
-      description: "Tips and tricks to become proficient in React in just a few weeks.",
-      image: "https://source.unsplash.com/600x400/?react",
-    },
-    {
-      id: 2,
-      title: "Understanding JavaScript Closures",
-      description: "Closures are one of the most important concepts in JS. Learn them now!",
-      image: "https://source.unsplash.com/600x400/?javascript",
-    },
-    {
-      id: 3,
-      title: "Designing Modern Dashboards",
-      description: "Best practices to create clean, responsive dashboards for your apps.",
-      image: "https://source.unsplash.com/600x400/?dashboard",
-    },
-  ];
+  const navbarStyle = {
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+    padding: '1rem 0',
+  };
+
+  const sidebarStyle = {
+    background: '#f8f9fa',
+    borderRight: '1px solid #e0e0e0',
+    minHeight: 'calc(100vh - 60px)',
+    padding: '2rem 0',
+    transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+    transition: 'transform 0.3s ease',
+    position: 'fixed',
+    left: 0,
+    top: 60,
+    width: '250px',
+    zIndex: 999,
+  };
+
+  const contentStyle = {
+    marginLeft: sidebarOpen ? '250px' : '0',
+    padding: '2rem',
+    transition: 'margin-left 0.3s ease',
+    minHeight: 'calc(100vh - 60px)',
+    background: '#ffffff',
+  };
 
   return (
-    <div className="dashboard-wrapper">
-
-      {/* Top Navbar */}
-      <Navbar className="dashboard-navbar px-4 shadow-sm">
-        <div className="navbar-left">
-          <Button variant="light" className="d-md-none me-2" onClick={toggleSidebar}>
-            <FiMenu />
+    <div style={{ minHeight: '100vh', background: '#ffffff' }}>
+      {/* Navbar */}
+      <Navbar style={navbarStyle} fixed="top" className="w-100">
+        <div style={{ display: 'flex', alignItems: 'center', width: '100%', paddingLeft: '1rem', paddingRight: '1rem' }}>
+          <Button 
+            variant="light" 
+            className="d-md-none me-3" 
+            onClick={toggleSidebar}
+            style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white' }}
+          >
+            <FiMenu size={24} />
           </Button>
-          <Navbar.Brand className="fw-bold text-primary">📝 Blog Dashboard</Navbar.Brand>
-        </div>
-
-        <div className="navbar-right d-flex align-items-center gap-3">
-          <span className="d-none d-md-inline">Hi, {userInfo?.name || "User"}</span>
-          <Button size="sm" variant="outline-primary" onClick={handleLogout}>
-            Logout
-          </Button>
+          <h2 style={{ 
+            color: 'white', 
+            fontWeight: '800', 
+            margin: 0,
+            fontSize: '1.8rem',
+            letterSpacing: '1px'
+          }}>
+            📝 247 Gist Dashboard
+          </h2>
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <span style={{ color: 'white', fontWeight: '600' }}>
+              Hi, {userInfo?.name || "Admin"}
+            </span>
+            <Button 
+              size="sm" 
+              onClick={handleLogout}
+              style={{ 
+                background: 'rgba(255,255,255,0.2)', 
+                border: '1px solid rgba(255,255,255,0.4)',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.5rem 1rem'
+              }}
+            >
+              <FiLogOut size={16} /> Logout
+            </Button>
+          </div>
         </div>
       </Navbar>
 
-      <div className="dashboard-body">
-
+      <div style={{ display: 'flex', marginTop: '60px' }}>
         {/* Sidebar */}
-        <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-          <div className="sidebar-header mb-4">
-            <h4 className="text-primary fw-bold">Menu</h4>
+        <aside style={sidebarStyle}>
+          <div style={{ paddingLeft: '1.5rem', paddingRight: '1.5rem' }}>
+            <h4 style={{ color: '#1a1a2e', fontWeight: '800', marginBottom: '2rem' }}>Menu</h4>
+            <Nav className="flex-column" style={{ gap: '0.5rem' }}>
+              {menuItems.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  style={({ isActive }) => ({
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '8px',
+                    textDecoration: 'none',
+                    color: isActive ? 'white' : '#333',
+                    background: isActive ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'transparent',
+                    fontWeight: isActive ? '600' : '500',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                  })}
+                  onClick={() => {
+                    if (window.innerWidth < 768) {
+                      setSidebarOpen(false);
+                    }
+                  }}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>{item.icon}</span>
+                  {item.name}
+                </NavLink>
+              ))}
+            </Nav>
           </div>
-
-          <Nav className="flex-column gap-2">
-            {menuItems.map((item) => (
-              <NavLink
-                key={item.name}
-                to={item.path}
-                className={({ isActive }) => isActive ? "nav-link active-link" : "nav-link"}
-              >
-                <span className="icon">{item.icon}</span> {item.name}
-              </NavLink>
-            ))}
-          </Nav>
         </aside>
 
         {/* Main Content */}
-        <main className="content">
-          {/* Header */}
-          <div className="content-header d-flex justify-content-between align-items-center mb-4">
-            <h3>Your Blog Posts</h3>
-            <Button className="btn-gradient">+ New Post</Button>
-          </div>
-
-          {/* Blog Posts Grid */}
-          <div className="blog-grid">
-            {posts.map((post) => (
-              <div className="blog-card" key={post.id}>
-                <img src={post.image} alt={post.title} />
-                <div className="card-body">
-                  <h5 className="card-title">{post.title}</h5>
-                  <p className="card-text">{post.description}</p>
-                  <Button className="btn-read-more" onClick={() => alert(`Read more about: ${post.title}`)}>
-                    Read More
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Outlet for nested routes */}
-          <Outlet />
+        <main style={contentStyle}>
+          <Outlet context={{ userInfo }} />
         </main>
-
       </div>
     </div>
   );

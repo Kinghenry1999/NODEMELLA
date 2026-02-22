@@ -68,20 +68,20 @@ function Allpost() {
     navigate(`/dashboard/editpost/${postId}`);
   };
   return (
-    <Container className="mt-4">
+    <div>
       <div style={{ marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: '800', color: '#1a1a2e', marginBottom: '0.5rem' }}>
-          Your Published Posts
+        <h2 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#1a1a2e', marginBottom: '0.5rem' }}>
+          📋 Your Published Posts
         </h2>
         <p style={{ color: '#666', fontSize: '0.95rem' }}>
-          Manage and view all your published blog posts.
+          Manage and view all your published blog posts. These posts are displayed on the homepage.
         </p>
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
 
       {loading && (
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <div style={{ textAlign: 'center', padding: '3rem 0' }}>
           <Spinner animation="border" variant="primary" />
           <p style={{ marginTop: '1rem', color: '#666' }}>Loading your posts...</p>
         </div>
@@ -89,8 +89,8 @@ function Allpost() {
 
       {!loading && posts.length === 0 && (
         <Alert variant="info" style={{ textAlign: 'center' }}>
-          <p style={{ marginBottom: 0 }}>No posts yet!</p>
-          <small>Create your first post to see it here.</small>
+          <p style={{ marginBottom: 0 }}>📝 No posts yet!</p>
+          <small>Click "Create Post" in the menu to publish your first post.</small>
         </Alert>
       )}
 
@@ -101,10 +101,21 @@ function Allpost() {
               <Card className="blog-card h-100" style={{
                 border: 'none',
                 borderRadius: '12px',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.08)',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
                 overflow: 'hidden',
                 transition: 'all 0.3s ease',
-              }}>
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.15)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+              >
                 {post.image && (
                   <Card.Img 
                     src={post.image} 
@@ -113,32 +124,34 @@ function Allpost() {
                   />
                 )}
 
-                <Card.Body>
-                  <Card.Title style={{ fontSize: '1.15rem', fontWeight: '700', color: '#1a1a2e' }}>
+                <Card.Body style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <Card.Title style={{ fontSize: '1.2rem', fontWeight: '700', color: '#1a1a2e', marginBottom: '0.75rem' }}>
                     {post.heading}
                   </Card.Title>
-                  <Card.Text style={{ color: '#666', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                    {post.content.substring(0, 100)}...
+                  <Card.Text style={{ color: '#666', fontSize: '0.9rem', lineHeight: '1.5', flex: 1 }}>
+                    {post.content.substring(0, 120)}...
                   </Card.Text>
-                  <small style={{ color: '#999' }}>
-                    Published: {new Date(post.created_at).toLocaleDateString()}
+                  <small style={{ color: '#999', marginTop: '0.5rem' }}>
+                    📅 {new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                   </small>
                 </Card.Body>
 
-                <Card.Footer style={{ background: '#f9fafb', borderTop: '1px solid #e0e0e0' }} className="d-flex justify-content-between">
+                <Card.Footer style={{ background: '#f9fafb', borderTop: '1px solid #e0e0e0', padding: '0.75rem 1rem' }} className="d-flex justify-content-between gap-2">
                   <Button 
                     size="sm" 
-                    variant="primary"
+                    variant="outline-primary"
                     onClick={() => handleEdit(post.id)}
+                    style={{ flex: 1, fontSize: '0.85rem', padding: '0.5rem' }}
                   >
-                    Edit
+                    ✏️ Edit
                   </Button>
                   <Button 
                     size="sm" 
-                    variant="danger"
+                    variant="outline-danger"
                     onClick={() => handleDelete(post.id)}
+                    style={{ flex: 1, fontSize: '0.85rem', padding: '0.5rem' }}
                   >
-                    Delete
+                    🗑️ Delete
                   </Button>
                 </Card.Footer>
               </Card>
@@ -146,7 +159,7 @@ function Allpost() {
           ))}
         </Row>
       )}
-    </Container>
+    </div>
   );
 }
 
