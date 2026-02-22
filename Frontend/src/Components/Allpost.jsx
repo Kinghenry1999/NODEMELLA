@@ -117,11 +117,21 @@ function Allpost() {
               }}
               >
                 {post.image && (
-                  <Card.Img 
-                    src={post.image} 
-                    alt={post.heading}
-                    style={{ objectFit: 'cover', height: '200px' }}
-                  />
+                  <div style={{
+                    width: '100%',
+                    height: '200px',
+                    backgroundColor: '#f5f5f5',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden'
+                  }}>
+                    <Card.Img 
+                      src={post.image} 
+                      alt={post.heading}
+                      style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
+                    />
+                  </div>
                 )}
 
                 <Card.Body style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

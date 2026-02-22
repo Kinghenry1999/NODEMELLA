@@ -342,12 +342,22 @@ const HomePage = () => {
                     }}
                   >
                     {post.image && (
-                      <Card.Img
-                        variant="top"
-                        src={post.image}
-                        alt={post.heading}
-                        style={{ objectFit: 'cover', height: '200px' }}
-                      />
+                      <div style={{
+                        width: '100%',
+                        height: '200px',
+                        backgroundColor: '#f5f5f5',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'hidden'
+                      }}>
+                        <Card.Img
+                          variant="top"
+                          src={post.image}
+                          alt={post.heading}
+                          style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
+                        />
+                      </div>
                     )}
                     <Card.Body style={{ display: 'flex', flexDirection: 'column' }}>
                       <Card.Title style={{ fontSize: '1.25rem', fontWeight: '700', color: '#1a1a2e' }}>

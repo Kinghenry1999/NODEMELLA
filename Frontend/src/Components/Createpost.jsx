@@ -33,9 +33,17 @@ function Createpost() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size (5MB max)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Image size must be less than 5MB');
+      // Accept any image file type
+      const validImageTypes = /^image\//i;
+      if (!validImageTypes.test(file.type)) {
+        setError('Please select a valid image file');
+        return;
+      }
+
+      // Check file size (10MB max for larger images)
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        setError('Image size must be less than 10MB');
         return;
       }
 
@@ -176,8 +184,11 @@ function Createpost() {
     imagePreview: {
       marginTop: '1rem',
       borderRadius: '8px',
-      maxHeight: '300px',
-      objectFit: 'cover',
+      width: '100%',
+      maxHeight: '400px',
+      objectFit: 'contain',
+      backgroundColor: '#f5f5f5',
+      padding: '0.5rem',
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
     },
     button: {
@@ -243,7 +254,7 @@ function Createpost() {
               required
             />
             <small style={{ color: '#666', marginTop: '0.5rem' }}>
-              📁 Supported formats: JPG, PNG, GIF, WebP (Max size: 5MB)
+              📁 Supported formats: JPG, PNG, GIF, WebP, BMP, SVG, TIFF (Max size: 10MB)
               {fileName && <span style={{ marginLeft: '1rem', color: '#667eea', fontWeight: '600' }}>✓ {fileName}</span>}
             </small>
             {imagePreview && (
