@@ -1,4 +1,78 @@
+import { useState, useEffect } from 'react';
+import { Container, Alert, Spinner } from 'react-bootstrap';
+import api from '../Utility/Api.jsx';
+import { useNavigate } from 'react-router-dom';
+
 function Createpost() {
+  const [formData, setFormData] = useState({
+    heading: '',
+    content: '',
+    image: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Get user info from localStorage (set during login)
+    const userInfo = localStorage.getItem('user');
+    if (userInfo) {
+      setUser(JSON.parse(userInfo));
+    }
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!user) {
+      setError('Please login to create a post');
+      return;
+    }
+
+    if (!formData.heading.trim() || !formData.content.trim() || !formData.image.trim()) {
+      setError('All fields are required');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const payload = {
+        heading: formData.heading,
+        content: formData.content,
+        image: formData.image,
+        adminId: user.id,
+      };
+
+      const response = await api.post('/posts', payload);
+
+      if (response.data.success) {
+        setSuccess('Post published successfully! It will appear on the homepage soon.');
+        setFormData({ heading: '', content: '', image: '' });
+        
+        // Redirect to dashboard or homepage after 2 seconds
+        setTimeout(() => {
+          navigate('/dashboard/allpost');
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Error creating post:', err);
+      setError(err.response?.data?.error || 'Failed to create post. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const styles = {
     wrapper: {

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Container, Card, Form, Button, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../Utility/Api";
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [message, setMessage] = useState({ text: "", type: "" });
+  const navigate = useNavigate();
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -17,8 +18,15 @@ export default function Register() {
         email: form.email,
         password: form.password,
       });
+      // Store user info in localStorage
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       setMessage({ text: res.data.message, type: "success" });
       setForm({ name: "", email: "", password: "" });
+      
+      // Redirect to dashboard after successful registration
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
     } catch (err) {
       const errorData = err.response?.data;
       let errorMessage = "Unknown error occurred";

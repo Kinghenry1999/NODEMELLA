@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import authRoutes from "./routes/authRoutes.js";
 import sendemailRoutes from "./routes/emailRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 
 const app = express();
 
@@ -15,6 +16,9 @@ app.use("/api/auth", authRoutes);
 
 // Email routes
 app.use("/api/email", sendemailRoutes);
+
+// Post routes
+app.use("/api/posts", postRoutes);
 
 // Test route
 app.get("/", (req, res) => res.send("Backend running 🚀"));
