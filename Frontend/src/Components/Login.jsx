@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Card, Form, Button, Alert, Modal } from "react-bootstrap";
+import { Container, Card, Form, Button, Alert, Modal, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import api from "../Utility/Api";
@@ -17,6 +17,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const res = await api.post("/auth/login", {
         email: form.email,
@@ -39,6 +40,8 @@ export default function Login() {
         type: "danger",
       });
       console.error("Login error:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,8 +100,22 @@ export default function Login() {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100 mb-3">
-            Login
+          <Button variant="primary" type="submit" className="w-100 mb-3" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  style={{ marginRight: "0.5rem" }}
+                />
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
           </Button>
         </Form>
 

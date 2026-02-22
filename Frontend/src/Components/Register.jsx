@@ -1,17 +1,19 @@
 import { useState } from "react";
-import { Container, Card, Form, Button, Alert } from "react-bootstrap";
+import { Container, Card, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../Utility/Api";
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const res = await api.post("/auth/register", {
         name: form.name,
@@ -48,6 +50,8 @@ export default function Register() {
         type: "danger",
       });
       console.error("Register error:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,8 +99,22 @@ export default function Register() {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100 mb-3">
-            Register
+          <Button variant="primary" type="submit" className="w-100 mb-3" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  style={{ marginRight: "0.5rem" }}
+                />
+                Registering...
+              </>
+            ) : (
+              "Register"
+            )}
           </Button>
         </Form>
 
