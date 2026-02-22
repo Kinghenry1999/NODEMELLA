@@ -22,17 +22,23 @@ export default function Login() {
         email: form.email,
         password: form.password,
       });
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      setMessage({ text: "✅ Login successful! Redirecting...", type: "success" });
-      setForm({ email: "", password: "" });
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 1000);
+      
+      if (res.data.success) {
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        setMessage({ text: "✅ Login successful! Redirecting...", type: "success" });
+        setForm({ email: "", password: "" });
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      }
     } catch (err) {
+      const errorData = err.response?.data;
+      const errorMessage = errorData?.error || err.message || "Login failed";
       setMessage({
-        text: "❌ Error: " + (err.response?.data?.error || err.message),
+        text: "❌ Error: " + errorMessage,
         type: "danger",
       });
+      console.error("Login error:", err);
     }
   };
 

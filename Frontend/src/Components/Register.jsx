@@ -18,15 +18,18 @@ export default function Register() {
         email: form.email,
         password: form.password,
       });
-      // Store user info in localStorage
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      setMessage({ text: res.data.message, type: "success" });
-      setForm({ name: "", email: "", password: "" });
       
-      // Redirect to dashboard after successful registration
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000);
+      if (res.data.success) {
+        // Store user info in localStorage
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        setMessage({ text: "✅ " + res.data.message, type: "success" });
+        setForm({ name: "", email: "", password: "" });
+        
+        // Redirect to dashboard after successful registration
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1500);
+      }
     } catch (err) {
       const errorData = err.response?.data;
       let errorMessage = "Unknown error occurred";
@@ -44,6 +47,7 @@ export default function Register() {
         text: "❌ Error: " + errorMessage,
         type: "danger",
       });
+      console.error("Register error:", err);
     }
   };
 
