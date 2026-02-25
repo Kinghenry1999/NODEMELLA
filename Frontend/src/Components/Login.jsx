@@ -24,14 +24,19 @@ export default function Login() {
         password: form.password,
       });
       
+      // if (res.data.success) {
+      //   localStorage.setItem("user", JSON.stringify(res.data.user));
+      //   setMessage({ text: "✅ Login successful! Redirecting...", type: "success" });
+      //   setForm({ email: "", password: "" });
+      //   setTimeout(() => {
+      //     navigate("/dashboard");
+      //   }, 1000);
+      // }
+
       if (res.data.success) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        setMessage({ text: "✅ Login successful! Redirecting...", type: "success" });
-        setForm({ email: "", password: "" });
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
-      }
+  localStorage.setItem("user", JSON.stringify(res.data.user));
+  navigate("/dashboard");
+}
     } catch (err) {
       const errorData = err.response?.data;
       const errorMessage = errorData?.error || err.message || "Login failed";
