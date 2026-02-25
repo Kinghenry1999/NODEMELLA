@@ -3,6 +3,7 @@ import { Navbar, Nav, Button } from "react-bootstrap";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { FiMenu, FiFileText, FiEdit, FiLogOut } from "react-icons/fi";
 import "./Dashboard.css";
+import api from "../Utility/Api";
 
 export default function Dashboard() {
   const navigate = useNavigate();
